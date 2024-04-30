@@ -14,31 +14,35 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AtSign, LockKeyholeIcon, User } from "lucide-react";
+import { AtSign, CaptionsIcon, LockKeyholeIcon, User } from "lucide-react";
 import Header from "@/components/header";
 
 const formSchema = z.object({
-  username: z
-    .string().min(2, {
+  username: z.string().min(2, {
     message: "O nome de usuário deve ter pelo menos 2 caracteres",
   }),
   email: z
     .string()
     .email({ message: "Por favor, insira um endereço de e-mail válido" }),
+  document: z
+    .string()
+    .min(11, { message: "Por favor, insira um documento válido" }),
   password: z
     .string()
     .min(6, { message: "A senha deve ter pelo menos 6 caracteres" }),
   repeatpassword: z
     .string()
-    .min(6, { message: "A senha deve ter pelo menos 6 caracteres" }).max(10, { message: "A senha deve ter no máximo 10 caracteres" }),
+    .min(6, { message: "A senha deve ter pelo menos 6 caracteres" })
+    .max(10, { message: "A senha deve ter no máximo 10 caracteres" }),
 });
 
-const RegisterClientPage = () => {
+const RegisterOrganizationPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       email: "",
+      document: "",
       password: "",
       repeatpassword: "",
     },
@@ -88,6 +92,26 @@ const RegisterClientPage = () => {
                         <Input
                           className="min-w-72"
                           placeholder="Digite um email válido"
+                          {...field}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="document"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">CNPJ/CPF</FormLabel>
+                    <div className="flex flex-row gap-2">
+                      <CaptionsIcon className="mt-2" />
+                      <FormControl>
+                        <Input
+                          className="min-w-72"
+                          placeholder="Digite seu CNPJ ou CPF"
                           {...field}
                         />
                       </FormControl>
@@ -152,4 +176,4 @@ const RegisterClientPage = () => {
   );
 };
 
-export default RegisterClientPage;
+export default RegisterOrganizationPage;
