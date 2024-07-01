@@ -7,8 +7,8 @@ import { Card } from "@/components/ui/card";
 import PersonItem from "./components/person-item";
 import { useEffect, useState } from "react";
 import api from "../_api/api";
-import { EventType } from "@/types/event";
-import { OrganizerType } from "@/types/organizers";
+import { EventType } from "@/app/_types/event";
+import { OrganizerType } from "@/app/_types/organizers";
 
 export default function Home() {
   const [events, setEvents] = useState<EventType[]>([]);

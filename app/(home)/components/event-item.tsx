@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { EventType } from '@/types/event';
+import { EventType } from '@/app/_types/event';
 import { format } from 'date-fns';
 
 

@@ -1,4 +1,4 @@
-import { OrganizerType } from "@/types/organizers";
+import { OrganizerType } from "@/app/_types/organizers";
 import Image from "next/image";
 
 interface OrganizerItemProps {
