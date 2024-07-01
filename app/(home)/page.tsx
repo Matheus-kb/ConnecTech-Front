@@ -8,20 +8,29 @@ import PersonItem from "./components/person-item";
 import { useEffect, useState } from "react";
 import api from "../_api/api";
 import { EventType } from "@/types/event";
+import { OrganizerType } from "@/types/organizers";
 
 export default function Home() {
   const [events, setEvents] = useState<EventType[]>([]);
+  const [organizers, setOrganizers] = useState<OrganizerType[]>([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
       const response = await api.get("/events");
       setEvents(response.data);
     };
-
     fetchEvents();
+
+    const fetchOrganizers = async () => {
+      const response = await api.get("/organizers");
+      setOrganizers(response.data);
+    };
+    fetchOrganizers();
   }, []);
 
-  const sortedByDate = [...events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const sortedByDate = [...events].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 
   return (
     <>
@@ -44,7 +53,7 @@ export default function Home() {
       <Card className="mb-5 py-2">
         <h2 className="font-semibold px-5 pb-3 uppercase">Eventos Populares</h2>
         <div className="flex px-5 gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
-        {sortedByDate.map((event) => (
+          {sortedByDate.map((event) => (
             <EventItem key={event.id} event={event} />
           ))}
         </div>
@@ -54,14 +63,9 @@ export default function Home() {
           Pessoas e empresas
         </h2>
         <div className="flex px-5 gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
-          <PersonItem />
-          <PersonItem />
-          <PersonItem />
-          <PersonItem />
-          <PersonItem />
-          <PersonItem />
-          <PersonItem />
-          <PersonItem />
+          {organizers.map((organizer) => (
+            <PersonItem key={organizer.id} organizer={organizer} />
+          ))}
         </div>
       </Card>
     </>

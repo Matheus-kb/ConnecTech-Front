@@ -1,6 +1,11 @@
+import { OrganizerType } from "@/types/organizers";
 import Image from "next/image";
 
-const PersonItem = () => {
+interface OrganizerItemProps {
+  organizer: OrganizerType;
+}
+
+const PersonItem = ({organizer} : OrganizerItemProps) => {
   return (
     <div className="flex flex-col justify-center items-center min-w-20 max-w-20">
       <div className="relative w-14 h-14">
@@ -12,7 +17,7 @@ const PersonItem = () => {
           style={{ objectFit: "cover" }}
         />
       </div>
-      <p className="font-medium text-center overflow-hidden text-ellipsis">Angelo Luz</p>
+      <p className="font-medium text-center overflow-hidden text-ellipsis">{organizer.name}</p>
     </div>
   );
 };
