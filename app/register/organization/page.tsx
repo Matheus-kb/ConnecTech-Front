@@ -16,6 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { AtSign, CaptionsIcon, LockKeyholeIcon, User } from "lucide-react";
 import Header from "@/components/header";
+import { useState } from "react";
+import axios from "axios";
+import api from "@/app/_api/api";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -37,6 +40,7 @@ const formSchema = z.object({
 });
 
 const RegisterOrganizationPage = () => {
+  const [message, setMessage] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,8 +52,30 @@ const RegisterOrganizationPage = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (values.password !== values.repeatpassword) {
+      setMessage("As senhas não coincidem");
+      return;
+    }
+
+    try {
+      const response = await api.post("/organizers", {
+        name: values.username,
+        email: values.email,
+        cnpj: values.document,
+        password: values.password,
+      });
+      setMessage("Conta de organizador criada com sucesso!");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setMessage(
+          "Erro ao criar a conta de organizador: " +
+            (error.response?.data?.message || error.message)
+        );
+      } else {
+        setMessage("Erro desconhecido ao criar a conta de organizador");
+      }
+    }
   }
 
   return (
