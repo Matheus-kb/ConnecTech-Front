@@ -17,8 +17,11 @@ import { Input } from "@/components/ui/input";
 import { AtSign, LockKeyholeIcon } from "lucide-react";
 import Header from "@/components/header";
 import api from "../_api/api";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useUser } from "../_context/userContext"; 
+import Cookies from "js-cookie";
 
 const formSchema = z.object({
   email: z
@@ -30,7 +33,7 @@ const formSchema = z.object({
 });
 
 const LoginPage = () => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,6 +41,9 @@ const LoginPage = () => {
       password: "",
     },
   });
+
+  const { setUser } = useUser();
+  const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -48,8 +54,15 @@ const LoginPage = () => {
 
       // Lida com o sucesso do login
       setMessage("Login realizado com sucesso!");
-      // Salve o token de autenticação, redirecione o usuário, etc.
-      console.log(response.data);
+
+      // Salve o token de autenticação no localStorage
+      Cookies.set("token", response.data.access_token);
+
+      // Salve os dados do usuário no contexto
+      setUser(response.data.user);
+
+      // Redirecione o usuário para a página principal
+      router.push("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setMessage(
