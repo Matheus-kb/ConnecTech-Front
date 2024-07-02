@@ -16,6 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { AtSign, LockKeyholeIcon } from "lucide-react";
 import Header from "@/components/header";
+import api from "../_api/api";
+import { useState } from "react";
+import axios from "axios";
 
 const formSchema = z.object({
   email: z
@@ -27,6 +30,7 @@ const formSchema = z.object({
 });
 
 const LoginPage = () => {
+  const [message, setMessage] = useState('');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,8 +39,27 @@ const LoginPage = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await api.post("/auth/login", {
+        email: values.email,
+        password: values.password,
+      });
+
+      // Lida com o sucesso do login
+      setMessage("Login realizado com sucesso!");
+      // Salve o token de autenticação, redirecione o usuário, etc.
+      console.log(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setMessage(
+          "Erro ao realizar login: " +
+            (error.response?.data?.message || error.message)
+        );
+      } else {
+        setMessage("Erro desconhecido ao realizar login");
+      }
+    }
   }
 
   return (
