@@ -14,8 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AtSign, LockKeyholeIcon, User } from "lucide-react";
+import { AtSign, CaptionsIcon, LockKeyholeIcon, User } from "lucide-react";
 import Header from "@/components/header";
+import { useState } from "react";
+import api from "@/app/_api/api";
+import axios from "axios";
 
 const formSchema = z.object({
   username: z
@@ -25,6 +28,9 @@ const formSchema = z.object({
   email: z
     .string()
     .email({ message: "Por favor, insira um endereço de e-mail válido" }),
+    document: z
+    .string()
+    .min(11, { message: "Por favor, insira um documento válido" }),
   password: z
     .string()
     .min(6, { message: "A senha deve ter pelo menos 6 caracteres" }),
@@ -34,19 +40,42 @@ const formSchema = z.object({
 });
 
 const RegisterClientPage = () => {
+  const [message, setMessage] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       email: "",
+      document: "",
       password: "",
       repeatpassword: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (values.password !== values.repeatpassword) {
+      setMessage("As senhas não coincidem");
+      return;
+    }
+
+    try {
+      const response = await api.post("/volunteers", {
+        name: values.username,
+        email: values.email,
+        cpf: values.document,
+        password: values.password,
+      });
+      setMessage("Conta de organizador criada com sucesso!");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setMessage(
+          "Erro ao criar a conta de organizador: " +
+            (error.response?.data?.message || error.message)
+        );
+      } else {
+        setMessage("Erro desconhecido ao criar a conta de organizador");
+      }
+    }  }
 
   return (
     <>
@@ -88,6 +117,26 @@ const RegisterClientPage = () => {
                         <Input
                           className="min-w-72"
                           placeholder="Digite um email válido"
+                          {...field}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="document"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">CPF</FormLabel>
+                    <div className="flex flex-row gap-2">
+                      <CaptionsIcon className="mt-2" />
+                      <FormControl>
+                        <Input
+                          className="min-w-72"
+                          placeholder="Digite seu CPF"
                           {...field}
                         />
                       </FormControl>
