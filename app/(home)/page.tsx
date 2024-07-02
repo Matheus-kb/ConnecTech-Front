@@ -9,10 +9,12 @@ import { useEffect, useState } from "react";
 import api from "../_api/api";
 import { EventType } from "@/app/_types/event";
 import { OrganizerType } from "@/app/_types/organizers";
+import { useUser } from "@/app/_context/userContext"; 
 
 export default function Home() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [organizers, setOrganizers] = useState<OrganizerType[]>([]);
+  const { user } = useUser(); // Obtendo os dados do usuário do contexto
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -36,7 +38,7 @@ export default function Home() {
     <>
       <Header />
       <div className="px-5 pt-12 pb-2">
-        <h1 className="font-bold text-3xl">Olá usuário!</h1>
+        <h1 className="font-bold text-3xl">Olá {user?.name || "usuário"}!</h1>
         <p className="font-semibold">Confira os eventos de hoje</p>
       </div>
       <div className="pb-9">
