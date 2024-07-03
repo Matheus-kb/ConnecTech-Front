@@ -27,6 +27,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useSession } from "next-auth/react";
+import api from "@/app/_api/api";
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -45,6 +48,8 @@ const formSchema = z.object({
 });
 
 const EditProfilePage = () => {
+  const { data } = useSession();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,8 +60,30 @@ const EditProfilePage = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (values.password !== values.repeatpassword) {
+      console.error("As senhas não coincidem");
+      return;
+    }
+
+    try {
+      const response = await api.put(
+        `/${data?.user?.type}s/${data?.user?.id}`,
+        {
+          name: values.username,
+          email: values.email,
+          password: values.password,
+        }
+      );
+
+      if (response.status === 200) {
+        router.push("/profile");
+      } else {
+        console.error("Erro ao atualizar perfil:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar perfil:", error);
+    }
   }
 
   return (
@@ -73,9 +100,7 @@ const EditProfilePage = () => {
               style={{ objectFit: "cover" }}
             />
           </div>
-          <h1 className="uppercase font-bold text-xl pt-2">
-            Faça seu cadastro
-          </h1>
+          <h1 className="uppercase font-bold text-xl pt-2">Edite seu perfil</h1>
         </div>
         <div>
           <Form {...form}>
@@ -91,7 +116,7 @@ const EditProfilePage = () => {
                       <FormControl>
                         <Input
                           className="min-w-72"
-                          placeholder="Digite o nome"
+                          placeholder={data?.user?.name}
                           {...field}
                         />
                       </FormControl>
@@ -111,7 +136,7 @@ const EditProfilePage = () => {
                       <FormControl>
                         <Input
                           className="min-w-72"
-                          placeholder="Digite um email válido"
+                          placeholder={data?.user?.email}
                           {...field}
                         />
                       </FormControl>
@@ -130,6 +155,7 @@ const EditProfilePage = () => {
                       <LockKeyholeIcon className="mt-2" />
                       <FormControl>
                         <Input
+                          type="password"
                           className="min-w-72"
                           placeholder="Digite uma senha de 6 á 10 caracteres"
                           {...field}
@@ -150,6 +176,7 @@ const EditProfilePage = () => {
                       <LockKeyholeIcon className="mt-2" />
                       <FormControl>
                         <Input
+                          type="password"
                           className="min-w-72"
                           placeholder="Digite sua senha novamente"
                           {...field}
@@ -177,8 +204,12 @@ const EditProfilePage = () => {
                       </AlertDialogTitle>
                     </AlertDialogHeader>
                     <div className="flex flex-row justify-center items-center gap-12">
-                      <AlertDialogAction className="rounded-full">SIM</AlertDialogAction>
-                      <AlertDialogCancel className="mt-0 rounded-full">NÃO</AlertDialogCancel>
+                      <AlertDialogAction className="rounded-full">
+                        SIM
+                      </AlertDialogAction>
+                      <AlertDialogCancel className="mt-0 rounded-full">
+                        NÃO
+                      </AlertDialogCancel>
                     </div>
                   </AlertDialogContent>
                 </AlertDialog>

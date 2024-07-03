@@ -1,13 +1,15 @@
+"use client"
+
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Bolt, Home, LogOut, TicketCheck, User2 } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/_api/auth"; 
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
-const SideMenu = async () => {
-  const session = await getServerSession(authOptions);
+const SideMenu = () => {
+  const { data } = useSession();
   const router = useRouter();
 
   const handleLogout = () => {
@@ -18,6 +20,11 @@ const SideMenu = async () => {
   const handleProfile = () => { 
     router.push('/profile'); // Redireciona para a página de perfil do usuário
   }
+
+  const handleHome = () => {
+    router.push('/'); // Redireciona para a página inicial
+  }
+
 
 
   return (
@@ -32,7 +39,7 @@ const SideMenu = async () => {
             style={{ objectFit: "cover" }}
           />
         </div>
-        <h1 className="text-2xl font-semibold pt-3">{session?.user?.name}</h1>
+        <h1 className="text-2xl font-semibold pt-3">{data?.user?.name}</h1>
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex items-center">
@@ -41,7 +48,7 @@ const SideMenu = async () => {
         </div>
         <div className="flex items-center">
           <Home />
-          <Button variant="ghost">Inicio</Button>
+          <Button variant="ghost" onClick={handleHome}>Inicio</Button>
         </div>
         <div className="flex items-center">
           <TicketCheck />

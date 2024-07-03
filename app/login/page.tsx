@@ -48,7 +48,7 @@ const LoginPage = () => {
       const res = await signIn("credentials", {
         email: values.email,
         password: values.password,
-        redirect: false, // Impede o redirecionamento imediato
+        redirect: false, 
       });
 
       if (res?.error) {
@@ -56,8 +56,7 @@ const LoginPage = () => {
       } else {
         setMessage("Login realizado com sucesso!");
         console.log(res);
-        router.push("/profile");
-        // Redirecionar para a página principal após um curto atraso
+        router.push("/");
       }
     } catch (error) {
       console.error('Erro no login:', error);

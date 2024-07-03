@@ -1,13 +1,22 @@
+"use client"
+
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../_api/auth";
+import { useRouter } from 'next/navigation';
+import { useSession } from "next-auth/react";
 
-const ProfilePage = async () => {
-  const session = await getServerSession(authOptions);
-  console.log(session);
+
+const ProfilePage = () => {
+  const { data } = useSession();
+  const router = useRouter();
+
   
+  const handleEditProfile = () => {
+    router.push('/profile/edit');
+  }
 
   return (
     <>
@@ -23,10 +32,10 @@ const ProfilePage = async () => {
           />
         </div>
         <div className="py-4">
-          <h1 className="font-semibold text-2xl">{session?.user?.name}</h1>
+          <h1 className="font-semibold text-2xl">{data?.user?.name}</h1>
         </div>
         <div className="py-8  w-48">
-          <Button className="uppercase rounded-full font-semibold text-lg w-48">
+          <Button className="uppercase rounded-full font-semibold text-lg w-48" onClick={handleEditProfile}>
             Editar perfil
           </Button>
         </div>
