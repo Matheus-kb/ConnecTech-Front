@@ -20,8 +20,7 @@ import api from "../_api/api";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useUser } from "../_context/userContext"; 
-import Cookies from "js-cookie";
+import { signIn } from "next-auth/react";
 
 const formSchema = z.object({
   email: z
@@ -42,36 +41,27 @@ const LoginPage = () => {
     },
   });
 
-  const { setUser } = useUser();
   const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await api.post("/auth/login", {
+      const res = await signIn("credentials", {
         email: values.email,
         password: values.password,
+        redirect: false, // Impede o redirecionamento imediato
       });
 
-      // Lida com o sucesso do login
-      setMessage("Login realizado com sucesso!");
-
-      // Salve o token de autenticação no localStorage
-      Cookies.set("token", response.data.access_token);
-
-      // Salve os dados do usuário no contexto
-      setUser(response.data.user);
-
-      // Redirecione o usuário para a página principal
-      router.push("/");
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setMessage(
-          "Erro ao realizar login: " +
-            (error.response?.data?.message || error.message)
-        );
+      if (res?.error) {
+        setMessage("Erro ao realizar login: " + res.error);
       } else {
-        setMessage("Erro desconhecido ao realizar login");
+        setMessage("Login realizado com sucesso!");
+        console.log(res);
+        router.push("/profile");
+        // Redirecionar para a página principal após um curto atraso
       }
+    } catch (error) {
+      console.error('Erro no login:', error);
+      setMessage("Erro desconhecido ao realizar login");
     }
   }
 
@@ -93,6 +83,7 @@ const LoginPage = () => {
                       <AtSign className="mt-2" />
                       <FormControl>
                         <Input
+                          type="text"
                           className="min-w-72"
                           placeholder="Digite seu email de cadastro"
                           {...field}
@@ -113,6 +104,7 @@ const LoginPage = () => {
                       <LockKeyholeIcon className="mt-2" />
                       <FormControl>
                         <Input
+                          type="password"
                           className="min-w-72"
                           placeholder="Digite sua senha"
                           {...field}

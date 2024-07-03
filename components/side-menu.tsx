@@ -1,17 +1,24 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Bolt, Home, LogOut, TicketCheck, User2 } from "lucide-react";
-import { useUser } from "@/app/_context/userContext"; 
 import { useRouter } from 'next/navigation';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/_api/auth"; 
+import { signOut } from "next-auth/react";
 
-const SideMenu = () => {
-  const { user, logout } = useUser(); // Obtendo os dados do usuário do contexto
+const SideMenu = async () => {
+  const session = await getServerSession(authOptions);
   const router = useRouter();
 
   const handleLogout = () => {
-    logout();
+    signOut();
     router.push('/login'); // Redireciona para a página de login após o logout
   };
+
+  const handleProfile = () => { 
+    router.push('/profile'); // Redireciona para a página de perfil do usuário
+  }
+
 
   return (
     <div>
@@ -25,12 +32,12 @@ const SideMenu = () => {
             style={{ objectFit: "cover" }}
           />
         </div>
-        <h1 className="text-2xl font-semibold pt-3">{user?.name}</h1>
+        <h1 className="text-2xl font-semibold pt-3">{session?.user?.name}</h1>
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex items-center">
           <User2 />
-          <Button variant="ghost">Perfil</Button>
+          <Button variant="ghost" onClick={handleProfile}>Perfil</Button>
         </div>
         <div className="flex items-center">
           <Home />
