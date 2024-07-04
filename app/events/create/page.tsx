@@ -37,6 +37,7 @@ import {
 import api from "@/app/_api/api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   eventname: z.string().min(2, {
@@ -45,7 +46,7 @@ const formSchema = z.object({
   local: z.string().min(2, {
     message: "Digite um local válido",
   }),
-  date: z.date({ message: "Por favor, insira uma data" }),
+  date: z.date(),
   hour: z.string().min(4, {
     message: "Digite um horário válido",
   }),
@@ -55,6 +56,7 @@ const formSchema = z.object({
 });
 
 const EventCreatePage = () => {
+  const router = useRouter();
   const { data } = useSession();
   const [date, setDate] = React.useState<Date>();
   const [message, setMessage] = React.useState<string | null>(null);
@@ -63,23 +65,29 @@ const EventCreatePage = () => {
     defaultValues: {
       eventname: "",
       local: "",
+      date: new Date(),
       hour: "",
       description: "",
     },
   });
 
+  const handleDateClick = (date: Date | undefined) => {
+    setDate(date);
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    console.log(date);
     
     try {
       const response = await api.post("/events", {
         location: values.local,
         title: values.eventname,
         description: values.description,
-        organizerId: data?.user.id,
+        organizerId: "0c7dd9a0-0a99-4f8a-9777-27f033412857",
         date: new Date(values.date), // Certifique-se de que o valor de 'date' é uma string que pode ser convertida para um Date
       });
       setMessage("Evento criado com sucesso!");
+      router.push("/events/create/success");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         setMessage(
@@ -170,7 +178,7 @@ const EventCreatePage = () => {
                                 <Calendar
                                   mode="single"
                                   selected={date}
-                                  onSelect={setDate}
+                                  onSelect={handleDateClick}
                                   initialFocus
                                 />
                               </PopoverContent>

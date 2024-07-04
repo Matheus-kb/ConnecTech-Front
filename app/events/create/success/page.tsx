@@ -1,8 +1,16 @@
+"use client"
+
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const SuccessCreationPage = () => {
+  const router = useRouter();
+  const handleInitial = () => {
+    router.push("/");
+  }
+
   return (
     <>
       <Header />
@@ -16,7 +24,7 @@ const SuccessCreationPage = () => {
           </div>
         </div>
         <div className="mt-auto">
-          <Button className="min-w-[18.75rem] rounded-3xl font-bold text-xl">
+          <Button className="min-w-[18.75rem] rounded-3xl font-bold text-xl" onClick={handleInitial}>
             Voltar para o inicio
           </Button>
         </div>
