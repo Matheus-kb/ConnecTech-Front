@@ -34,6 +34,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import api from "@/app/_api/api";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 const formSchema = z.object({
   eventname: z.string().min(2, {
@@ -52,7 +55,9 @@ const formSchema = z.object({
 });
 
 const EventCreatePage = () => {
+  const { data } = useSession();
   const [date, setDate] = React.useState<Date>();
+  const [message, setMessage] = React.useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,8 +68,28 @@ const EventCreatePage = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    
+    try {
+      const response = await api.post("/events", {
+        location: values.local,
+        title: values.eventname,
+        description: values.description,
+        organizerId: data?.user.id,
+        date: new Date(values.date), // Certifique-se de que o valor de 'date' é uma string que pode ser convertida para um Date
+      });
+      setMessage("Evento criado com sucesso!");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setMessage(
+          "Erro ao criar o evento: " +
+          (error.response?.data?.message || error.message)
+        );
+      } else {
+        setMessage("Erro desconhecido ao criar o evento");
+      }
+    }
   }
   return (
     <>

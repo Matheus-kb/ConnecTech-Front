@@ -1,7 +1,11 @@
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
 
 const RegisterPage = () => {
+  const router = useRouter();
+  const handleClient = () => { router.push('/register/client') }
+  const handleOrganization = () => { router.push('/register/organization') }
   return (
     <>
       <Header />
