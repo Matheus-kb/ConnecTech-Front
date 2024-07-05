@@ -1,15 +1,23 @@
+"use client"
+
 import Image from "next/image";
 import { EventType } from '@/app/_types/event';
 import { format } from 'date-fns';
-
+import { useRouter } from 'next/navigation';
 
 interface EventItemProps {
   event: EventType;
 }
 
-const EventItem = ({event} : EventItemProps) => {
+
+const EventItem: React.FC<EventItemProps> = ({ event }) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/events/[id]`);
+  };
   return (
-    <div className="min-w-52 max-w-52">
+    <div onClick={handleClick} className="min-w-52 max-w-52 cursor-pointer">
       <div className="py-0">
         <div className="w-full h-[5rem] relative">
           <Image
