@@ -19,8 +19,9 @@ import Header from "@/components/header";
 import api from "../_api/api";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z
@@ -45,21 +46,20 @@ const LoginPage = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false, 
+      const res = await api.post("/auth/login", {
+        body: { email: values.email, password: values.password },
       });
 
-      if (res?.error) {
-        setMessage("Erro ao realizar login: " + res.error);
+      if (res?.status === 401) {
+        setMessage("Erro ao realizar login: " + res.data.message);
       } else {
         setMessage("Login realizado com sucesso!");
-        console.log(res);
         router.push("/");
+        sessionStorage.setItem("token", res.data.access_token);
+        sessionStorage.setItem("user", JSON.stringify(res.data.user));
       }
     } catch (error) {
-      console.error('Erro no login:', error);
+      console.error("Erro no login:", error);
       setMessage("Erro desconhecido ao realizar login");
     }
   }

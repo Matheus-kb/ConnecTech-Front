@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useSession } from "next-auth/react";
 import api from "@/app/_api/api";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -48,7 +48,8 @@ const formSchema = z.object({
 });
 
 const EditProfilePage = () => {
-  const { data } = useSession();
+  const session = JSON.parse(sessionStorage.getItem("user") || "");
+  const data = session !== "" ? session : "";
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,27 +63,32 @@ const EditProfilePage = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.password !== values.repeatpassword) {
-      console.error("As senhas não coincidem");
+      window.alert("As senhas não coincidem");
       return;
     }
 
     try {
-      const response = await api.put(
-        `/${data?.user?.type}s/${data?.user?.id}`,
-        {
-          name: values.username,
-          email: values.email,
-          password: values.password,
-        }
-      );
+      const response = await api.put(`/${data?.type}s/${data?.id}`, {
+        name: values.username,
+        email: values.email,
+        password: values.password,
+      });
 
       if (response.status === 200) {
+        const user = data;
+
+        user.name = values.username;
+        user.email = values.email;
+        user.password = values.password;
+
+        sessionStorage.setItem("user", JSON.stringify(user));
+
         router.push("/profile");
       } else {
-        console.error("Erro ao atualizar perfil:", response.statusText);
+        window.alert(`Erro ao atualizar perfil: ${response.statusText}`);
       }
     } catch (error) {
-      console.error("Erro ao atualizar perfil:", error);
+      window.alert(`Erro ao atualizar perfil: ${error}`);
     }
   }
 
@@ -116,7 +122,7 @@ const EditProfilePage = () => {
                       <FormControl>
                         <Input
                           className="min-w-72"
-                          placeholder={data?.user?.name}
+                          placeholder={data?.name}
                           {...field}
                         />
                       </FormControl>
@@ -136,7 +142,7 @@ const EditProfilePage = () => {
                       <FormControl>
                         <Input
                           className="min-w-72"
-                          placeholder={data?.user?.email}
+                          placeholder={data?.email}
                           {...field}
                         />
                       </FormControl>

@@ -54,7 +54,7 @@ const RegisterOrganizationPage = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.password !== values.repeatpassword) {
-      setMessage("As senhas não coincidem");
+      window.alert("As senhas não coincidem");
       return;
     }
 
@@ -65,15 +65,15 @@ const RegisterOrganizationPage = () => {
         cnpj: values.document,
         password: values.password,
       });
-      setMessage("Conta de organizador criada com sucesso!");
+      window.alert("Conta de organizador criada com sucesso!");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        setMessage(
+        window.alert(
           "Erro ao criar a conta de organizador: " +
             (error.response?.data?.message || error.message)
         );
       } else {
-        setMessage("Erro desconhecido ao criar a conta de organizador");
+        window.alert("Erro desconhecido ao criar a conta de organizador");
       }
     }
   }

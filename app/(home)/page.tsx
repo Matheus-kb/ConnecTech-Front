@@ -1,11 +1,20 @@
-// app/(home)/page.tsx
+"use client";
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/_api/auth";
 import HomeContent from "./HomeContent";
+import { useRouter } from "next/navigation";
 
-export default async function Home() {
-  const session = await getServerSession(authOptions);
-  const userName = session?.user?.name || "usuário";
-
-  return <HomeContent userName={userName} />;
+export default function Home() {
+  return (
+    <>
+      {sessionStorage.getItem("user") === null ? (
+        useRouter().push("/login")
+      ) : (
+        <HomeContent
+          userName={JSON.parse(sessionStorage.getItem("user") || "").name}
+        />
+      )}
+    </>
+  );
 }
