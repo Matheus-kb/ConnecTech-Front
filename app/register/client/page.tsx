@@ -21,14 +21,13 @@ import api from "@/app/_api/api";
 import axios from "axios";
 
 const formSchema = z.object({
-  username: z
-    .string().min(2, {
+  username: z.string().min(2, {
     message: "O nome de usuário deve ter pelo menos 2 caracteres",
   }),
   email: z
     .string()
     .email({ message: "Por favor, insira um endereço de e-mail válido" }),
-    document: z
+  document: z
     .string()
     .min(11, { message: "Por favor, insira um documento válido" }),
   password: z
@@ -36,7 +35,8 @@ const formSchema = z.object({
     .min(6, { message: "A senha deve ter pelo menos 6 caracteres" }),
   repeatpassword: z
     .string()
-    .min(6, { message: "A senha deve ter pelo menos 6 caracteres" }).max(10, { message: "A senha deve ter no máximo 10 caracteres" }),
+    .min(6, { message: "A senha deve ter pelo menos 6 caracteres" })
+    .max(10, { message: "A senha deve ter no máximo 10 caracteres" }),
 });
 
 const RegisterClientPage = () => {
@@ -54,7 +54,7 @@ const RegisterClientPage = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.password !== values.repeatpassword) {
-      setMessage("As senhas não coincidem");
+      window.alert("As senhas não coincidem");
       return;
     }
 
@@ -65,17 +65,18 @@ const RegisterClientPage = () => {
         cpf: values.document,
         password: values.password,
       });
-      setMessage("Conta de organizador criada com sucesso!");
+      window.alert("Conta de organizador criada com sucesso!");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        setMessage(
+        window.alert(
           "Erro ao criar a conta de organizador: " +
             (error.response?.data?.message || error.message)
         );
       } else {
-        setMessage("Erro desconhecido ao criar a conta de organizador");
+        window.alert("Erro desconhecido ao criar a conta de organizador");
       }
-    }  }
+    }
+  }
 
   return (
     <>
