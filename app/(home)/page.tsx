@@ -6,10 +6,11 @@ import HomeContent from "./HomeContent";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <>
       {sessionStorage.getItem("user") === null ? (
-        useRouter().push("/login")
+        router.push("/login")
       ) : (
         <HomeContent
           userName={JSON.parse(sessionStorage.getItem("user") || "").name}
