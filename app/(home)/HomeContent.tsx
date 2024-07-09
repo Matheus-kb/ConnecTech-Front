@@ -39,7 +39,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ userName }) => {
   );
 
   return (
-    <>
+    <div className="lg:mx">
       <Header />
       <Card className="flex lg:mb-5">
         <div className="flex-1 px-5 pt-12 pb-2 lg:pb-0">
@@ -62,7 +62,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ userName }) => {
         </div>
       </Card>
 
-      <Card className="mb-5 py-2">
+      <Card className="mb-5 py-2 lg:pl-4">
         <h2 className="font-semibold px-5 pb-3 uppercase">Eventos próximos</h2>
         <div className="flex px-5 gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden lg:gap-12">
           {events.map((event) => (
@@ -70,7 +70,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ userName }) => {
           ))}
         </div>
       </Card>
-      <Card className="mb-5 py-2">
+      <Card className="mb-5 py-2 lg:pl-4">
         <h2 className="font-semibold px-5 pb-3 uppercase">Eventos Populares</h2>
         <div className="flex px-5 gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden lg:gap-12">
           {sortedByDate.map((event) => (
@@ -78,7 +78,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ userName }) => {
           ))}
         </div>
       </Card>
-      <Card className="mb-5 py-2">
+      <Card className="mb-5 py-2 lg:pl-4">
         <h2 className="font-semibold px-5 pb-3 uppercase">
           Pessoas e empresas
         </h2>
@@ -88,7 +88,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ userName }) => {
           ))}
         </div>
       </Card>
-    </>
+    </div>
   );
 };
 
