@@ -1,6 +1,6 @@
 "use client";
 
-import Header from "@/components/header";
+import Header2 from "@/components/header2";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -9,10 +9,10 @@ const RegisterPage = () => {
 
   return (
     <>
-      <Header />
+      <Header2 />
       <div className="flex justify-center items-center h-[90vh]">
         <div className="flex flex-col gap-4 px-4">
-          <h1 className="pb-12 font-bold text-center text-xl">
+          <h1 className="pb-12 font-bold text-center text-xl lg:text-2xl">
             Escolha o seu tipo de conta
           </h1>
           <Button

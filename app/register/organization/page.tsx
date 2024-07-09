@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,10 +14,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AtSign, CaptionsIcon, LockKeyholeIcon, User } from "lucide-react";
-import Header from "@/components/header";
 import { useState } from "react";
 import axios from "axios";
 import api from "@/app/_api/api";
+import Header2 from "@/components/header2";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -80,9 +79,9 @@ const RegisterOrganizationPage = () => {
 
   return (
     <>
-      <Header />
+      <Header2 />
       <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="uppercase font-bold text-xl pb-12">Faça seu cadastro</h1>
+        <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">Faça seu cadastro</h1>
         <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
