@@ -9,13 +9,16 @@ export default function Home() {
   const router = useRouter();
   return (
     <>
-      {sessionStorage.getItem("user") === null ? (
-        router.push("/login")
+      {/* {sessionStorage.getItem("user") === null ? (
+        router.push("/")
       ) : (
         <HomeContent
           userName={JSON.parse(sessionStorage.getItem("user") || "").name}
         />
-      )}
+      )} */}
+       <HomeContent
+          userName="User Name"
+        />
     </>
   );
 }

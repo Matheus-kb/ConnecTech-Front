@@ -8,7 +8,7 @@ interface OrganizerItemProps {
 const PersonItem = ({organizer} : OrganizerItemProps) => {
   return (
     <div className="flex flex-col justify-center items-center min-w-20 max-w-20">
-      <div className="relative w-14 h-14">
+      <div className="relative w-14 h-14 lg:w-36 lg:h-36">
         <Image
           src="/angelo.png"
           alt="Pessoas em destaque"
