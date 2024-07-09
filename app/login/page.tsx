@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,13 +14,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AtSign, LockKeyholeIcon } from "lucide-react";
-import Header from "@/components/header";
 import api from "../_api/api";
-import { useContext, useState } from "react";
-import axios from "axios";
-
-import { signIn } from "next-auth/react";
+import {  useState } from "react";
 import { useRouter } from "next/navigation";
+import Header2 from "@/components/header2";
 
 const formSchema = z.object({
   email: z
@@ -66,9 +62,9 @@ const LoginPage = () => {
 
   return (
     <>
-      <Header />
+      <Header2 />
       <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="uppercase font-bold text-xl pb-12">Faça seu login</h1>
+        <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">Faça seu login</h1>
         <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
