@@ -20,7 +20,12 @@ const Header = () => {
   return (
     <Card className="max-h-12">
       <CardContent className="flex flex-row justify-between items-center pt-1">
-        <ChevronLeft onClick={goBack} className="min-w-9 min-h-9" />
+        <ChevronLeft  className="min-w-9 min-h-9 lg:hidden" />
+        <Button variant="ghost" onClick={goBack} className="hidden lg:block"> 
+        <div>
+          <h1 className="font-bold text-3xl">ConnecTech</h1>
+        </div>
+        </Button>
         <div className="hidden lg:flex space-x-4 items-end ml-auto">
           {sideMenuItems.slice(0, 3).map((item, index) => (
             <Button key={index} variant="ghost" onClick={item.onClick}>
