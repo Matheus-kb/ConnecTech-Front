@@ -49,17 +49,17 @@ const SideMenu = () => {
             Perfil
           </Button>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center lg:hidden">
           <Home />
           <Button variant="ghost" onClick={handleHome}>
             Inicio
           </Button>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center lg:hidden">
           <TicketCheck />
           <Button variant="ghost">Ingressos</Button>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center lg:hidden">
           <Bolt />
           <Button variant="ghost">Configurações</Button>
         </div>
