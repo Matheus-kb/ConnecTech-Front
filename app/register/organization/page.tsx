@@ -64,7 +64,12 @@ const RegisterOrganizationPage = () => {
         cnpj: values.document,
         password: values.password,
       });
-      window.alert("Conta de organizador criada com sucesso!");
+      const confirma = window.confirm(
+        "Conta de organizador criada com sucesso!"
+      );
+      if (confirma) {
+        window.location.href = "/login";
+      }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         window.alert(
@@ -80,8 +85,10 @@ const RegisterOrganizationPage = () => {
   return (
     <>
       <Header2 />
-      <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">Faça seu cadastro</h1>
+      <div className="flex flex-col items-center justify-center my-4">
+        <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">
+          Faça seu cadastro
+        </h1>
         <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

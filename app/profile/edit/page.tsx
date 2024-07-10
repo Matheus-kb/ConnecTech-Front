@@ -48,8 +48,10 @@ const formSchema = z.object({
 });
 
 const EditProfilePage = () => {
-  const session = JSON.parse(sessionStorage.getItem("user") || "");
-  const data = session !== "" ? session : "";
+  const data =
+    sessionStorage.getItem("user") === null
+      ? null
+      : JSON.parse(sessionStorage.getItem("user") || "");
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -94,144 +96,166 @@ const EditProfilePage = () => {
 
   return (
     <>
-      <Header />
-      <div className="flex flex-col items-center justify-center h-[90vh]">
-        <div className="flex flex-row gap-4  pb-12">
-          <div className="relative w-12 h-12">
-            <Image
-              src="/profile.png"
-              alt="Foto de perfil"
-              className="rounded-full"
-              fill
-              style={{ objectFit: "cover" }}
-            />
-          </div>
-          <h1 className="uppercase font-bold text-xl pt-2">Edite seu perfil</h1>
-        </div>
+      {sessionStorage.getItem("user") === null ? (
+        router.push("/login")
+      ) : (
         <div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold">Nome do usuário</FormLabel>
-                    <div className="flex flex-row gap-2">
-                      <User className="mt-2" />
-                      <FormControl>
-                        <Input
-                          className="min-w-72"
-                          placeholder={data?.name}
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold">Email</FormLabel>
-                    <div className="flex flex-row gap-2">
-                      <AtSign className="mt-2" />
-                      <FormControl>
-                        <Input
-                          className="min-w-72"
-                          placeholder={data?.email}
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold">Senha</FormLabel>
-                    <div className="flex flex-row gap-2">
-                      <LockKeyholeIcon className="mt-2" />
-                      <FormControl>
-                        <Input
-                          type="password"
-                          className="min-w-72"
-                          placeholder="Digite uma senha de 6 á 10 caracteres"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="repeatpassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold">Confirmar senha</FormLabel>
-                    <div className="flex flex-row gap-2">
-                      <LockKeyholeIcon className="mt-2" />
-                      <FormControl>
-                        <Input
-                          type="password"
-                          className="min-w-72"
-                          placeholder="Digite sua senha novamente"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
+          <Header />
+          <div className="flex flex-col items-center justify-center my-4">
+            <div className="flex flex-row gap-4  pb-12">
+              <div className="relative w-12 h-12">
+                <Image
+                  src="/profile.png"
+                  alt="Foto de perfil"
+                  className="rounded-full"
+                  fill
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
+              <h1 className="uppercase font-bold text-xl pt-2">
+                Edite seu perfil
+              </h1>
+            </div>
+            <div>
+              <Form {...form}>
+                <form className="space-y-8">
+                  <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">
+                          Nome do usuário
+                        </FormLabel>
+                        <div className="flex flex-row gap-2">
+                          <User className="mt-2" />
+                          <FormControl>
+                            <Input
+                              className="min-w-72"
+                              placeholder={data?.name}
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">Email</FormLabel>
+                        <div className="flex flex-row gap-2">
+                          <AtSign className="mt-2" />
+                          <FormControl>
+                            <Input
+                              className="min-w-72"
+                              placeholder={data?.email}
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">Senha</FormLabel>
+                        <div className="flex flex-row gap-2">
+                          <LockKeyholeIcon className="mt-2" />
+                          <FormControl>
+                            <Input
+                              type="password"
+                              className="min-w-72"
+                              placeholder="Digite uma senha de 6 á 10 caracteres"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="repeatpassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">
+                          Confirmar senha
+                        </FormLabel>
+                        <div className="flex flex-row gap-2">
+                          <LockKeyholeIcon className="mt-2" />
+                          <FormControl>
+                            <Input
+                              type="password"
+                              className="min-w-72"
+                              placeholder="Digite sua senha novamente"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button className="min-w-[18.75rem] rounded-3xl font-bold text-xl uppercase">
+                          Confirmar
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="max-w-72 rounded-lg">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Confirmar as alterações?
+                          </AlertDialogTitle>
+                        </AlertDialogHeader>
+                        <div className="flex flex-row justify-center items-center gap-12">
+                          <AlertDialogAction
+                            className="rounded-full"
+                            onClick={() => {
+                              form.trigger().then((isValid) => {
+                                if (isValid) {
+                                  onSubmit(form.getValues());
+                                } else {
+                                  window.alert(
+                                    "Por favor, preencha todos os campos"
+                                  );
+                                }
+                              });
+                            }}
+                          >
+                            SIM
+                          </AlertDialogAction>
+                          <AlertDialogCancel className="mt-0 rounded-full">
+                            NÃO
+                          </AlertDialogCancel>
+                        </div>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                  <div>
                     <Button
                       className="min-w-[18.75rem] rounded-3xl font-bold text-xl uppercase"
-                      type="submit"
+                      variant="outline"
                     >
-                      Confirmar
+                      Cancelar
                     </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent className="max-w-72 rounded-lg">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Confirmar as alterações?
-                      </AlertDialogTitle>
-                    </AlertDialogHeader>
-                    <div className="flex flex-row justify-center items-center gap-12">
-                      <AlertDialogAction className="rounded-full">
-                        SIM
-                      </AlertDialogAction>
-                      <AlertDialogCancel className="mt-0 rounded-full">
-                        NÃO
-                      </AlertDialogCancel>
-                    </div>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-              <div>
-                <Button
-                  className="min-w-[18.75rem] rounded-3xl font-bold text-xl uppercase"
-                  variant="outline"
-                >
-                  Cancelar
-                </Button>
-              </div>
-            </form>
-          </Form>
+                  </div>
+                </form>
+              </Form>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
