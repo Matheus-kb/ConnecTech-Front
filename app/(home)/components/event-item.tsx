@@ -14,7 +14,7 @@ const EventItem: React.FC<EventItemProps> = ({ event }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/events/[id]`);
+    router.push(`/events/${event.id}`);
   };
   return (
     <div onClick={handleClick} className="min-w-52 max-w-52 cursor-pointer lg:min-w-96 lg:max-w-96 ">

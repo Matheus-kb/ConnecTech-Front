@@ -1,9 +1,11 @@
-// app/events/[id]/page.tsx
-import { notFound } from "next/navigation";
-import api from "@/app/_api/api";
-import { EventType } from "@/app/_types/event";
-import EventInfo from "./components/event-info"; 
-import Header from "@/components/header";
+"use client";
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import api from '@/app/_api/api';
+import { EventType } from '@/app/_types/event';
+import EventInfo from './components/event-info';
+import Header from '@/components/header';
 
 interface EventDetailProps {
   params: {
@@ -11,20 +13,33 @@ interface EventDetailProps {
   };
 }
 
-const fetchEvent = async (id: string): Promise<EventType | null> => {
-  try {
-    const response = await api.get(`/events/${id}`);
-    return response.data;
-  } catch (error) {
-    return null;
-  }
-};
+const EventDetail: React.FC<EventDetailProps> = ({ params }) => {
+  const [event, setEvent] = useState<EventType | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-const EventDetail: React.FC<EventDetailProps> = async ({ params }) => {
-  const event = await fetchEvent(params.id);
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const response = await api.get(`/events/${params.id}`);
+        setEvent(response.data);
+      } catch (error) {
+        console.error('Error fetching event:', error);
+        router.push('/404'); // Redireciona para a página 404 se o evento não for encontrado
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvent();
+  }, [params.id, router]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   if (!event) {
-    notFound();
+    return null; // Ou alguma mensagem de erro personalizada
   }
 
   return (
