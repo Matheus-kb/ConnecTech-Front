@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,12 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  AtSign,
   Clock,
-  LockKeyholeIcon,
   MapPin,
   PenLine,
-  User,
 } from "lucide-react";
 import Header from "@/components/header";
 import { Textarea } from "@/components/ui/textarea";
@@ -103,7 +99,7 @@ const EventCreatePage = () => {
     <>
       <Header />
       <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="uppercase font-bold text-xl pb-12">Monte seu evento</h1>
+        <h1 className="uppercase font-bold text-xl pb-12 lg:2xl">Monte seu evento</h1>
         <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -238,7 +234,7 @@ const EventCreatePage = () => {
                   className="min-w-[18.75rem] rounded-3xl font-bold text-xl uppercase"
                   type="submit"
                 >
-                  Avançar
+                  Criar
                 </Button>
               </div>
             </form>

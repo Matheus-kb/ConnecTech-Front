@@ -23,7 +23,7 @@ const Header = () => {
         <ChevronLeft  className="min-w-9 min-h-9 lg:hidden" />
         <Button variant="ghost" onClick={goBack} className="hidden lg:block"> 
         <div>
-          <h1 className="font-bold text-3xl">ConnecTech</h1>
+          <h1 className="font-bold text-3xl pt-[-0.5rem]">ConnecTech</h1>
         </div>
         </Button>
         <div className="hidden lg:flex space-x-4 items-end ml-auto">
