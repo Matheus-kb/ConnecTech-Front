@@ -64,15 +64,18 @@ const RegisterClientPage = () => {
         cpf: values.document,
         password: values.password,
       });
-      window.alert("Conta de organizador criada com sucesso!");
+      const confirma = window.confirm("Conta de cliente criada com sucesso!");
+      if (confirma) {
+        window.location.href = "/login";
+      }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         window.alert(
-          "Erro ao criar a conta de organizador: " +
+          "Erro ao criar a conta de cliente: " +
             (error.response?.data?.message || error.message)
         );
       } else {
-        window.alert("Erro desconhecido ao criar a conta de organizador");
+        window.alert("Erro desconhecido ao criar a conta de cliente");
       }
     }
   }
@@ -80,8 +83,11 @@ const RegisterClientPage = () => {
   return (
     <>
       <Header2 />
-      <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">Faça seu cadastro</h1>
+
+      <div className="flex flex-col items-center justify-center my-4">
+        <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">
+          Faça seu cadastro
+        </h1>
         <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

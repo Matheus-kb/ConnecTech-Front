@@ -14,7 +14,7 @@ const InitialPage = () => {
   };
   return (
     <>
-        <Header2 />
+      <Header2 />
       <div className="flex justify-center items-center h-screen">
         <div className="flex flex-col gap-1 px-4 mt-80 lg:mt-44">
           <Button

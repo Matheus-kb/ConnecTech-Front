@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { AtSign, LockKeyholeIcon } from "lucide-react";
 import api from "../_api/api";
-import {  useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header2 from "@/components/header2";
 
@@ -64,7 +64,9 @@ const LoginPage = () => {
     <>
       <Header2 />
       <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">Faça seu login</h1>
+        <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">
+          Faça seu login
+        </h1>
         <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -89,27 +91,35 @@ const LoginPage = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold">Senha</FormLabel>
-                    <div className="flex flex-row gap-2">
-                      <LockKeyholeIcon className="mt-2" />
-                      <FormControl>
-                        <Input
-                          type="password"
-                          className="min-w-72"
-                          placeholder="Digite sua senha"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex flex-col items-end">
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-bold">Senha</FormLabel>
+                      <div className="flex flex-row gap-2">
+                        <LockKeyholeIcon className="mt-2" />
+                        <FormControl>
+                          <Input
+                            type="password"
+                            className="min-w-72"
+                            placeholder="Digite sua senha"
+                            {...field}
+                          />
+                        </FormControl>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <a
+                  href="/register"
+                  className="mt-1 text-sm text-blue-600 underline"
+                >
+                  Cadastre-se
+                </a>
+              </div>
               <div className="mt-14">
                 <Button
                   className="min-w-[18.75rem] rounded-3xl font-bold text-xl"

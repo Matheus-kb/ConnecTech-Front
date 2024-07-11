@@ -13,11 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Clock,
-  MapPin,
-  PenLine,
-} from "lucide-react";
+import { Clock, MapPin, PenLine } from "lucide-react";
 import Header from "@/components/header";
 import { Textarea } from "@/components/ui/textarea";
 import * as React from "react";
@@ -53,7 +49,7 @@ const formSchema = z.object({
 
 const EventCreatePage = () => {
   const router = useRouter();
-  const { data } = useSession();
+
   const [date, setDate] = React.useState<Date>();
   const [message, setMessage] = React.useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -72,14 +68,12 @@ const EventCreatePage = () => {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(date);
-    
     try {
       const response = await api.post("/events", {
         location: values.local,
         title: values.eventname,
         description: values.description,
-        organizerId: "0c7dd9a0-0a99-4f8a-9777-27f033412857",
+        organizerId: "1",
         date: new Date(values.date), // Certifique-se de que o valor de 'date' é uma string que pode ser convertida para um Date
       });
       setMessage("Evento criado com sucesso!");
@@ -88,7 +82,7 @@ const EventCreatePage = () => {
       if (axios.isAxiosError(error)) {
         setMessage(
           "Erro ao criar o evento: " +
-          (error.response?.data?.message || error.message)
+            (error.response?.data?.message || error.message)
         );
       } else {
         setMessage("Erro desconhecido ao criar o evento");
@@ -97,150 +91,166 @@ const EventCreatePage = () => {
   }
   return (
     <>
-      <Header />
-      <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="uppercase font-bold text-xl pb-12 lg:2xl">Monte seu evento</h1>
+      {sessionStorage.getItem("user") === null ? (
+        router.push("/login")
+      ) : JSON.parse(sessionStorage.getItem("user") || "").type !==
+        "organizer" ? (
+        router.push("/")
+      ) : (
         <div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="eventname"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold">Nome do evento</FormLabel>
-                    <div className="flex flex-row gap-2">
-                      <PenLine className="mt-2" />
-                      <FormControl>
-                        <Input
-                          className="min-w-72"
-                          placeholder="Escreva o nome do evento"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="local"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold">Local</FormLabel>
-                    <div className="flex flex-row gap-2">
-                      <MapPin className="mt-2" />
-                      <FormControl>
-                        <Input
-                          className="min-w-72"
-                          placeholder="Insira um local para seu evento"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex flex-row gap-4 max-w-[90vw]">
-                <div className="max-w-[45vw]">
-                  <FormField
-                    control={form.control}
-                    name="date"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="font-bold">Data</FormLabel>
-                        <div className="flex flex-row gap-2">
-                          <CalendarIcon className="mt-2" />
-                          <FormControl>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-[280px] justify-start text-left font-normal",
-                                    !date && "text-muted-foreground"
-                                  )}
-                                >
-                                  {date ? (
-                                    format(date, "PPP")
-                                  ) : (
-                                    <span>Escolha uma data</span>
-                                  )}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0">
-                                <Calendar
-                                  mode="single"
-                                  selected={date}
-                                  onSelect={handleDateClick}
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
-                          </FormControl>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="max-w-[45vw]">
-                  <FormField
-                    control={form.control}
-                    name="hour"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="font-bold">Hora</FormLabel>
-                        <div className="flex flex-row gap-2">
-                          <Clock className="mt-2" />
-                          <FormControl>
-                            <Input placeholder="16:20" {...field} />
-                          </FormControl>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="pb-7">
-                <p className="text-sm underline">
-                  Escolha uma imagem para seu evento
-                </p>
-              </div>
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold">Descrição</FormLabel>
-                    <div className="flex flex-row gap-2">
-                      <FormControl>
-                        <Textarea
-                          placeholder="Faça uma descrição sobre seu evento"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-center items-center">
-                <Button
-                  className="min-w-[18.75rem] rounded-3xl font-bold text-xl uppercase"
-                  type="submit"
+          <Header />
+          <div className="flex flex-col items-center justify-center h-[90vh]">
+            <h1 className="uppercase font-bold text-xl pb-12 lg:2xl">
+              Monte seu evento
+            </h1>
+            <div>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8"
                 >
-                  Criar
-                </Button>
-              </div>
-            </form>
-          </Form>
+                  <FormField
+                    control={form.control}
+                    name="eventname"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">
+                          Nome do evento
+                        </FormLabel>
+                        <div className="flex flex-row gap-2">
+                          <PenLine className="mt-2" />
+                          <FormControl>
+                            <Input
+                              className="min-w-72"
+                              placeholder="Escreva o nome do evento"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="local"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">Local</FormLabel>
+                        <div className="flex flex-row gap-2">
+                          <MapPin className="mt-2" />
+                          <FormControl>
+                            <Input
+                              className="min-w-72"
+                              placeholder="Insira um local para seu evento"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex flex-row gap-4 max-w-[90vw]">
+                    <div className="max-w-[45vw]">
+                      <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-bold">Data</FormLabel>
+                            <div className="flex flex-row gap-2">
+                              <CalendarIcon className="mt-2" />
+                              <FormControl>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button
+                                      variant={"outline"}
+                                      className={cn(
+                                        "w-[280px] justify-start text-left font-normal",
+                                        !date && "text-muted-foreground"
+                                      )}
+                                    >
+                                      {date ? (
+                                        format(date, "PPP")
+                                      ) : (
+                                        <span>Escolha uma data</span>
+                                      )}
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-auto p-0">
+                                    <Calendar
+                                      mode="single"
+                                      selected={date}
+                                      onSelect={handleDateClick}
+                                      initialFocus
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                              </FormControl>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="max-w-[45vw]">
+                      <FormField
+                        control={form.control}
+                        name="hour"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-bold">Hora</FormLabel>
+                            <div className="flex flex-row gap-2">
+                              <Clock className="mt-2" />
+                              <FormControl>
+                                <Input placeholder="16:20" {...field} />
+                              </FormControl>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="pb-7">
+                    <p className="text-sm underline">
+                      Escolha uma imagem para seu evento
+                    </p>
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">Descrição</FormLabel>
+                        <div className="flex flex-row gap-2">
+                          <FormControl>
+                            <Textarea
+                              placeholder="Faça uma descrição sobre seu evento"
+                              className="resize-none"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex justify-center items-center">
+                    <Button
+                      className="min-w-[18.75rem] rounded-3xl font-bold text-xl uppercase"
+                      type="submit"
+                    >
+                      Criar
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

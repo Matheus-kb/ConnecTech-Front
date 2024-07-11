@@ -9,7 +9,6 @@ import Image from "next/image";
 
 const Header = () => {
   const router = useRouter();
-  const goBack = () => router.back();
 
   const sideMenuItems = [
     { label: "Inicio", path: "/", onClick: () => router.push("/") },
@@ -20,11 +19,15 @@ const Header = () => {
   return (
     <Card className="max-h-12">
       <CardContent className="flex flex-row justify-between items-center pt-1">
-        <ChevronLeft  className="min-w-9 min-h-9 lg:hidden" />
-        <Button variant="ghost" onClick={goBack} className="hidden lg:block"> 
-        <div>
-          <h1 className="font-bold text-3xl pt-[-0.5rem]">ConnecTech</h1>
-        </div>
+        <ChevronLeft className="min-w-9 min-h-9 lg:hidden" />
+        <Button
+          variant="ghost"
+          onClick={() => router.push("/")}
+          className="hidden lg:block"
+        >
+          <div>
+            <h1 className="font-bold text-3xl pt-[-0.5rem]">ConnecTech</h1>
+          </div>
         </Button>
         <div className="hidden lg:flex space-x-4 items-end ml-auto">
           {sideMenuItems.slice(0, 3).map((item, index) => (
@@ -48,7 +51,9 @@ const Header = () => {
                     style={{ objectFit: "cover" }}
                   />
                 </div>
-                <p className="font-semibold">User Name</p>
+                <p className="font-semibold">
+                  {JSON.parse(sessionStorage.getItem("user") || "").name}
+                </p>
               </div>
             </Button>
           </SheetTrigger>
