@@ -22,16 +22,16 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => {
       const confirma = window.confirm("Confirme sua compra de ingresso");
       if (confirma) {
         window.alert("Compra realizada com sucesso!");
-      } 
+      }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         window.alert(error.response?.data.message);
       }
     }
-  }
+  };
 
   return (
-    <div className="lg:flex lg:flex-col lg:justify-center lg:items-center">
+    <div className="flex flex-col justify-center lg:items-center">
       <div className="relative w-full h-44 lg:h-96 lg:w-[80%] lg:mx-auto lg:my-8">
         <Image
           src="/image.png"
@@ -50,17 +50,26 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => {
             {new Date(event.date).toLocaleTimeString()}
           </p>
           <p className="font-semibold overflow-hidden text-ellipsis text-nowrap lg:pb-6">
-             {event.location}
+            {event.location}
           </p>
         </div>
         <div>
-          <h2 className="font-medium text-lg pb-4 lg:text-xl lg:font-bold">Descrição</h2>
+          <h2 className="font-medium text-lg pb-4 lg:text-xl lg:font-bold">
+            Descrição
+          </h2>
           <p className="break-words whitespace-normal max-w-96">
             {event.description}
           </p>
         </div>
       </div>
-      <Button className="min-w-[18.75rem] rounded-3xl font-bold text-xl mt-4" onClick={handleBuyTicket}>Comprar ingresso</Button>
+      <div className="flex justify-center">
+        <Button
+          className="min-w-[18.75rem] rounded-3xl font-bold text-xl mt-4"
+          onClick={handleBuyTicket}
+        >
+          Comprar ingresso
+        </Button>
+      </div>
     </div>
   );
 };
