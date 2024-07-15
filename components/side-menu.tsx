@@ -4,9 +4,6 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { Bolt, Home, LogOut, TicketCheck, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/_api/auth";
-import { signOut, useSession } from "next-auth/react";
 
 const SideMenu = () => {
   const session = JSON.parse(sessionStorage.getItem("user") || "");

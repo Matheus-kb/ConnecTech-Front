@@ -1,13 +1,7 @@
+import api from "@/app/_api/api";
 import { EventType } from "@/app/_types/event";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 import Image from "next/image";
 
 interface EventInfoProps {
@@ -15,6 +9,27 @@ interface EventInfoProps {
 }
 
 const EventInfo: React.FC<EventInfoProps> = ({ event }) => {
+  const handleBuyTicket = async () => {
+    try {
+      const response = await api.post("/payment", {
+        userId: 1,
+        eventId: event.id,
+        value: 1000,
+        expiration: 5,
+        eventTitle: event.title,
+        image: "https://via.placeholder.com/150",
+      });
+      const confirma = window.confirm("Confirme sua compra de ingresso");
+      if (confirma) {
+        window.alert("Compra realizada com sucesso!");
+      } 
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        window.alert(error.response?.data.message);
+      }
+    }
+  }
+
   return (
     <div className="lg:flex lg:flex-col lg:justify-center lg:items-center">
       <div className="relative w-full h-44 lg:h-96 lg:w-[80%] lg:mx-auto lg:my-8">
@@ -45,6 +60,7 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => {
           </p>
         </div>
       </div>
+      <Button className="min-w-[18.75rem] rounded-3xl font-bold text-xl mt-4" onClick={handleBuyTicket}>Comprar ingresso</Button>
     </div>
   );
 };
