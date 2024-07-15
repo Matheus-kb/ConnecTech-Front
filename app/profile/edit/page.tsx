@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,12 +21,10 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useSession } from "next-auth/react";
 import api from "@/app/_api/api";
 import { useRouter } from "next/navigation";
 
@@ -99,11 +96,11 @@ const EditProfilePage = () => {
       {sessionStorage.getItem("user") === null ? (
         router.push("/login")
       ) : (
-        <div>
+        <div className="lg:min-h-screen lg:flex lg:flex-col lg:justify-center">
           <Header />
-          <div className="flex flex-col items-center justify-center my-4">
-            <div className="flex flex-row gap-4  pb-12">
-              <div className="relative w-12 h-12">
+          <div className="flex flex-col items-center justify-center my-4 lg:flex-row lg:justify-evenly lg:my-auto">
+            <div className="flex flex-row gap-4 pb-12 lg:flex-col lg:justify-center lg:items-center">
+              <div className="relative w-12 h-12 lg:w-72 lg:h-72">
                 <Image
                   src="/profile.png"
                   alt="Foto de perfil"
@@ -112,8 +109,11 @@ const EditProfilePage = () => {
                   style={{ objectFit: "cover" }}
                 />
               </div>
-              <h1 className="uppercase font-bold text-xl pt-2">
+              <h1 className="uppercase font-bold text-xl pt-2 lg:hidden">
                 Edite seu perfil
+              </h1>
+              <h1 className="hidden uppercase font-bold text-xl pt-2 lg:block">
+                {data.name}
               </h1>
             </div>
             <div>
