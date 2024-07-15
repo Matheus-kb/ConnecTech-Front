@@ -4,9 +4,15 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { Bolt, Home, LogOut, TicketCheck, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/_api/auth";
-import { signOut, useSession } from "next-auth/react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
 
 const SideMenu = () => {
   const session = JSON.parse(sessionStorage.getItem("user") || "");
@@ -63,12 +69,31 @@ const SideMenu = () => {
           <Bolt />
           <Button variant="ghost">Configurações</Button>
         </div>
-        <div className="flex items-center">
-          <LogOut color="hsla(0, 100%, 35%, 1)" />
-          <Button variant="ghost" onClick={handleLogout}>
-            Sair
-          </Button>
-        </div>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <div className="flex items-center">
+              <LogOut color="hsla(0, 100%, 35%, 1)" />
+              <Button variant="ghost">Sair</Button>
+            </div>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="max-w-72 rounded-lg">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Você deseja mesmo sair?</AlertDialogTitle>
+            </AlertDialogHeader>
+            <div className="flex flex-row justify-center items-center gap-12">
+              <AlertDialogAction
+                onClick={handleLogout}
+                className="rounded-full text-xl"
+              >
+                Sim
+              </AlertDialogAction>
+              <AlertDialogCancel className="rounded-full text-xl bg-red-600 text-white">
+                Não
+              </AlertDialogCancel>
+            </div>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ userName }) => {
   );
 
   return (
-    <div className="lg:mx">
+    <div>
       <Header />
       <Card className="flex lg:mb-5">
         <div className="flex-1 px-5 pt-12 pb-2 lg:pb-0">
