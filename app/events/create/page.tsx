@@ -42,7 +42,7 @@ const formSchema = z.object({
   hour: z.string().min(4, {
     message: "Digite um horário válido",
   }),
-  price: z.number().min(1, {
+  price: z.string().refine((val) => !isNaN(Number(val)), {
     message: "Digite um valor válido",
   }),
   description: z.string().min(10, {
@@ -62,7 +62,7 @@ const EventCreatePage = () => {
       local: "",
       date: new Date(),
       hour: "",
-      price: undefined,
+      price: "",
       description: "",
     },
   });
@@ -78,7 +78,7 @@ const EventCreatePage = () => {
         title: values.eventname,
         description: values.description,
         price: values.price,
-        organizerId: "c00257dd-efab-43dc-9e40-17ee503b3b56",
+        organizerId: "2e6b4188-196d-48ad-9ac5-c3e69903a74b",
         date: new Date(values.date), // Certifique-se de que o valor de 'date' é uma string que pode ser convertida para um Date
       });
       setMessage("Evento criado com sucesso!");
