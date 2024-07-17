@@ -181,7 +181,7 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => {
           Comprar ingresso
         </Button>
         <Button
-          className="min-w-[18.75rem] rounded-3xl font-bold text-xl mt-4 ml-4"
+          className="]rounded-3xl font-bold text-xl mt-4 ml-4"
           onClick={handleVolunteerAssociation}
         >
           Associar-se como Voluntário
