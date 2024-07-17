@@ -43,12 +43,14 @@ const EventItem: React.FC<EventItemProps> = ({ event }) => {
   useEffect(() => {
     getImageUrl();
   }, []);
+
+  console.log(imageUrl, 'url')
   return (
     <div onClick={handleClick} className="min-w-52 max-w-52 cursor-pointer lg:min-w-96 lg:max-w-96 ">
       <div className="py-0">
         <div className="w-full h-[5rem] relative lg:h-[9rem]">
           <Image
-            src={imageUrl}
+            src={imageUrl || '/images.png'}
             alt="Banner do evento"
             style={{ objectFit: "cover" }}
             fill
