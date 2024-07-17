@@ -42,6 +42,9 @@ const formSchema = z.object({
   hour: z.string().min(4, {
     message: "Digite um horário válido",
   }),
+  price: z.number().min(1, {
+    message: "Digite um valor válido",
+  }),
   description: z.string().min(10, {
     message: "A descrição da página deve ter pelo menos 10 caracteres",
   }),
@@ -59,6 +62,7 @@ const EventCreatePage = () => {
       local: "",
       date: new Date(),
       hour: "",
+      price: undefined,
       description: "",
     },
   });
@@ -73,7 +77,8 @@ const EventCreatePage = () => {
         location: values.local,
         title: values.eventname,
         description: values.description,
-        organizerId: "1",
+        price: values.price,
+        organizerId: "c00257dd-efab-43dc-9e40-17ee503b3b56",
         date: new Date(values.date), // Certifique-se de que o valor de 'date' é uma string que pode ser convertida para um Date
       });
       setMessage("Evento criado com sucesso!");
@@ -204,7 +209,7 @@ const EventCreatePage = () => {
                             <div className="flex flex-row gap-2">
                               <Clock className="mt-2" />
                               <FormControl>
-                                <Input placeholder="16:20" {...field} />
+                                <Input placeholder="15:00" {...field} />
                               </FormControl>
                             </div>
                             <FormMessage />
@@ -213,10 +218,31 @@ const EventCreatePage = () => {
                       />
                     </div>
                   </div>
-                  <div className="pb-7">
-                    <p className="text-sm underline">
-                      Escolha uma imagem para seu evento
-                    </p>
+                  <div className="pb-7 flex flex-row gap-4 max-w-[90vw] justify-between">
+                    <div className="max-w-[45vw]">
+                      <p className="text-sm underline lg:pt-4">
+                        Escolha uma imagem para seu evento
+                      </p>
+                    </div>
+                    <div className="max-w-[45vw]">
+                      <FormField
+                        control={form.control}
+                        name="price"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-bold">
+                              Preço do ingresso
+                            </FormLabel>
+                            <div className="flex flex-row gap-2">
+                              <FormControl>
+                                <Input placeholder="20,00" {...field} />
+                              </FormControl>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
                   <FormField
                     control={form.control}
