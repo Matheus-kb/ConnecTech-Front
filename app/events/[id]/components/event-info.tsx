@@ -164,6 +164,7 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => {
                     <td className="px-4 py-2 border-b border-gray-200">{index + 1}</td>
                     <td className="px-4 py-2 border-b border-gray-200">{volunteer.name}</td>
                   </tr>
+
                 ))}
               </tbody>
             </table>
