@@ -18,6 +18,7 @@ import api from "../_api/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header2 from "@/components/header2";
+import toast, { Toaster } from "react-hot-toast";
 
 const formSchema = z.object({
   email: z
@@ -50,12 +51,14 @@ const LoginPage = () => {
         setMessage("Erro ao realizar login: " + res.data.message);
       } else {
         setMessage("Login realizado com sucesso!");
+        toast.success("Login realizado com sucesso");
         router.push("/");
         sessionStorage.setItem("token", res.data.access_token);
         sessionStorage.setItem("user", JSON.stringify(res.data.user));
       }
     } catch (error) {
       console.error("Erro no login:", error);
+      toast.error("Erro desconhecido ao realizar login");
       setMessage("Erro desconhecido ao realizar login");
     }
   }
@@ -63,6 +66,7 @@ const LoginPage = () => {
   return (
     <>
       <Header2 />
+      <Toaster />
       <div className="flex flex-col items-center justify-center h-[90vh]">
         <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">
           Faça seu login

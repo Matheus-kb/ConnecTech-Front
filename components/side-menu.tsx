@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { Bolt, Home, LogOut, TicketCheck, User2 } from "lucide-react";
+import { Bolt, CalendarRange, Home, LogOut, TicketCheck, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   AlertDialog,
@@ -13,6 +13,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import { useEffect, useState } from "react";
+import router from "next/router";
 
 const SideMenu = () => {
   const session = JSON.parse(sessionStorage.getItem("user") || "");
@@ -30,16 +32,50 @@ const SideMenu = () => {
     router.push("/profile"); // Redireciona para a página de perfil do usuário
   };
 
+  const handleCreateEvent = () => {
+    router.push("/events/create")
+  }
+
   const handleHome = () => {
     router.push("/"); // Redireciona para a página inicial
   };
+
+  const [imageUrl, setImageUrl] = useState<string>("");
+
+  const getImageUrl = async () => {
+    if (!data?.type || !data?.id) {
+      console.error('Tipo ou ID não definidos');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/upload/${data.type}/${data.id}/photo`);
+
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.statusText}`);
+      }
+
+      // Assuming the response returns the actual file name
+      const imageName = await response.text(); // Adjust this according to your API response format
+      console.log(imageName, 'imagem')
+      // Construct the URL based on your server setup
+      const imageUrl = `${imageName}`;
+
+      setImageUrl(imageUrl);
+    } catch (error) {
+      console.error('Erro ao buscar a imagem:', error);
+    }
+  };
+  useEffect(() => {
+    getImageUrl();
+  }, []);
 
   return (
     <div>
       <div className="my-4">
         <div className="relative w-20 h-20">
           <Image
-            src="/profile.png"
+            src={imageUrl}
             alt="Foto de usuário"
             className="rounded-full"
             fill
@@ -55,6 +91,14 @@ const SideMenu = () => {
             Perfil
           </Button>
         </div>
+        {data.type === "organizer" && (
+          <div className="flex items-center">
+            <CalendarRange />
+            <Button variant="ghost" onClick={handleCreateEvent}>
+              Criar Evento
+            </Button>
+          </div>
+        )}
         <div className="flex items-center lg:hidden">
           <Home />
           <Button variant="ghost" onClick={handleHome}>

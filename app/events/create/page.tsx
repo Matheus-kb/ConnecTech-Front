@@ -49,7 +49,10 @@ const formSchema = z.object({
 
 const EventCreatePage = () => {
   const router = useRouter();
-
+  const data =
+    sessionStorage.getItem("user") === null
+      ? null
+      : JSON.parse(sessionStorage.getItem("user") || "");
   const [date, setDate] = React.useState<Date>();
   const [message, setMessage] = React.useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -73,7 +76,7 @@ const EventCreatePage = () => {
         location: values.local,
         title: values.eventname,
         description: values.description,
-        organizerId: "1",
+        organizerId: data.id,
         date: new Date(values.date), // Certifique-se de que o valor de 'date' é uma string que pode ser convertida para um Date
       });
       setMessage("Evento criado com sucesso!");
@@ -82,7 +85,7 @@ const EventCreatePage = () => {
       if (axios.isAxiosError(error)) {
         setMessage(
           "Erro ao criar o evento: " +
-            (error.response?.data?.message || error.message)
+          (error.response?.data?.message || error.message)
         );
       } else {
         setMessage("Erro desconhecido ao criar o evento");
