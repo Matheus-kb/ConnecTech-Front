@@ -20,6 +20,7 @@ const InitialPage = () => {
           <Button
             className="rounded-3xl font-bold min-w-[18.75rem] min-h-11 lg:text-base"
             onClick={handleLogin}
+
           >
             Login
           </Button>

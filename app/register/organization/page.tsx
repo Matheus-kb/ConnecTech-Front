@@ -18,6 +18,9 @@ import { useState } from "react";
 import axios from "axios";
 import api from "@/app/_api/api";
 import Header2 from "@/components/header2";
+import { Toaster, toast } from "react-hot-toast";
+import { setTimeout } from "timers";
+
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -53,7 +56,8 @@ const RegisterOrganizationPage = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.password !== values.repeatpassword) {
-      window.alert("As senhas não coincidem");
+      toast.error("As senhas não coincidem"); // This line is not necessary, but it's a good practice to show a
+      toast
       return;
     }
 
@@ -64,20 +68,19 @@ const RegisterOrganizationPage = () => {
         cnpj: values.document,
         password: values.password,
       });
-      const confirma = window.confirm(
-        "Conta de organizador criada com sucesso!"
-      );
-      if (confirma) {
+
+      toast.success("Conta de organizador criada com sucesso!");
+      setTimeout(() => {
         window.location.href = "/login";
-      }
+      }, 2000);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        window.alert(
+        toast.error(
           "Erro ao criar a conta de organizador: " +
-            (error.response?.data?.message || error.message)
+          (error.response?.data?.message || error.message)
         );
       } else {
-        window.alert("Erro desconhecido ao criar a conta de organizador");
+        toast.error("Erro desconhecido ao criar a conta de organizador");
       }
     }
   }
@@ -85,6 +88,7 @@ const RegisterOrganizationPage = () => {
   return (
     <>
       <Header2 />
+      <Toaster />
       <div className="flex flex-col items-center justify-center my-4">
         <h1 className="uppercase font-bold text-xl pb-12 lg:text-2xl">
           Faça seu cadastro
