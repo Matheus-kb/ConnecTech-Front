@@ -47,6 +47,8 @@ const LoginPage = () => {
         body: { email: values.email, password: values.password },
       });
 
+      console.log("res", res);
+
       if (res?.status === 401) {
         setMessage("Erro ao realizar login: " + res.data.message);
       } else {

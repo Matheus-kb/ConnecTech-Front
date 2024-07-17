@@ -42,7 +42,7 @@ const formSchema = z.object({
   hour: z.string().min(4, {
     message: "Digite um horário válido",
   }),
-  price: z.string().refine((val) => !isNaN(Number(val)), {
+  price: z.coerce.number().min(1, {
     message: "Digite um valor válido",
   }),
   description: z.string().min(10, {
@@ -65,7 +65,7 @@ const EventCreatePage = () => {
       local: "",
       date: new Date(),
       hour: "",
-      price: "",
+      price: 0,
       description: "",
     },
   });
@@ -76,13 +76,15 @@ const EventCreatePage = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      console.log("price", values.price);
+
       const response = await api.post("/events", {
         location: values.local,
         title: values.eventname,
         description: values.description,
         organizerId: data.id,
         price: values.price,
-        date: new Date(values.date), // Certifique-se de que o valor de 'date' é uma string que pode ser convertida para um Date
+        date: new Date(values.date),
       });
       setMessage("Evento criado com sucesso!");
       router.push("/events/create/success");
@@ -90,7 +92,7 @@ const EventCreatePage = () => {
       if (axios.isAxiosError(error)) {
         setMessage(
           "Erro ao criar o evento: " +
-          (error.response?.data?.message || error.message)
+            (error.response?.data?.message || error.message)
         );
       } else {
         setMessage("Erro desconhecido ao criar o evento");
@@ -238,7 +240,11 @@ const EventCreatePage = () => {
                             </FormLabel>
                             <div className="flex flex-row gap-2">
                               <FormControl>
-                                <Input placeholder="20,00" {...field} />
+                                <Input
+                                  type="number"
+                                  placeholder="20,00"
+                                  {...field}
+                                />
                               </FormControl>
                             </div>
                             <FormMessage />
