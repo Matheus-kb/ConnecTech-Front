@@ -27,6 +27,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import api from "@/app/_api/api";
 import { useRouter } from "next/navigation";
+import { Toaster, toast } from "react-hot-toast";
+import { useState, useEffect } from "react";
+import email from "next-auth/providers/email";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -60,9 +63,44 @@ const EditProfilePage = () => {
     },
   });
 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
+
+  const uploadUrl = `http://localhost:3000/upload/${data?.type}/${data?.id}`;
+  const getImageUrl = async () => {
+    if (!data?.type || !data?.id) {
+      console.error('Tipo ou ID não definidos');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/upload/${data.type}/${data.id}/photo`);
+
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.statusText}`);
+      }
+
+      // Assuming the response returns the actual file name
+      const imageName = await response.text(); // Adjust this according to your API response format
+      console.log(imageName, 'imagem')
+      // Construct the URL based on your server setup
+      const imageUrl = `${imageName}`;
+
+      setImageUrl(imageUrl);
+    } catch (error) {
+      console.error('Erro ao buscar a imagem:', error);
+    }
+  };
+
+
+  console.log(imageUrl, 'url')
+  useEffect(() => {
+    getImageUrl();
+  }, []);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.password !== values.repeatpassword) {
-      window.alert("As senhas não coincidem");
+      toast.error("As senhas não coincidem");
       return;
     }
 
@@ -82,17 +120,53 @@ const EditProfilePage = () => {
 
         sessionStorage.setItem("user", JSON.stringify(user));
 
+        toast.success("Perfil atualizado com sucesso!");
+
+        if (selectedFile) {
+          await uploadImage();
+        }
+
         router.push("/profile");
       } else {
-        window.alert(`Erro ao atualizar perfil: ${response.statusText}`);
+        toast.error(`Erro ao atualizar perfil: ${response.statusText}`);
       }
     } catch (error) {
-      window.alert(`Erro ao atualizar perfil: ${error}`);
+      toast.error(`Erro ao atualizar perfil: ${error}`);
+    }
+  }
+
+  async function uploadImage() {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        toast.success("Imagem enviada com sucesso!");
+        getImageUrl(); // Atualiza a imagem após o upload
+      } else {
+        toast.error("Erro ao enviar imagem");
+      }
+    } catch (error) {
+      toast.error(`Erro ao enviar imagem: ${error}`);
+    }
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
     }
   }
 
   return (
     <>
+      <Toaster />
       {sessionStorage.getItem("user") === null ? (
         router.push("/login")
       ) : (
@@ -102,12 +176,13 @@ const EditProfilePage = () => {
             <div className="flex flex-row gap-4 pb-12 lg:flex-col lg:justify-center lg:items-center">
               <div className="relative w-12 h-12 lg:w-72 lg:h-72">
                 <Image
-                  src="/profile.png"
+                  src={imageUrl}
                   alt="Foto de perfil"
                   className="rounded-full"
-                  fill
-                  style={{ objectFit: "cover" }}
+                  layout="fill"
+                  objectFit="cover"
                 />
+
               </div>
               <h1 className="uppercase font-bold text-xl pt-2 lg:hidden">
                 Edite seu perfil
@@ -206,6 +281,9 @@ const EditProfilePage = () => {
                     )}
                   />
                   <div>
+                    <input type="file" onChange={handleFileChange} />
+                  </div>
+                  <div>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button className="min-w-[18.75rem] rounded-3xl font-bold text-xl uppercase">
@@ -226,7 +304,7 @@ const EditProfilePage = () => {
                                 if (isValid) {
                                   onSubmit(form.getValues());
                                 } else {
-                                  window.alert(
+                                  toast.error(
                                     "Por favor, preencha todos os campos"
                                   );
                                 }
@@ -246,6 +324,7 @@ const EditProfilePage = () => {
                     <Button
                       className="min-w-[18.75rem] rounded-3xl font-bold text-xl uppercase"
                       variant="outline"
+                      onClick={() => router.push("/profile")}
                     >
                       Cancelar
                     </Button>
