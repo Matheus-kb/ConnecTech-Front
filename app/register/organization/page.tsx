@@ -20,6 +20,7 @@ import api from "@/app/_api/api";
 import Header2 from "@/components/header2";
 import { Toaster, toast } from "react-hot-toast";
 import { setTimeout } from "timers";
+import { useRouter } from "next/navigation";
 
 
 const formSchema = z.object({
@@ -42,6 +43,7 @@ const formSchema = z.object({
 });
 
 const RegisterOrganizationPage = () => {
+  const router = useRouter();
   const [message, setMessage] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,9 +72,6 @@ const RegisterOrganizationPage = () => {
       });
 
       toast.success("Conta de organizador criada com sucesso!");
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 2000);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(
@@ -82,6 +81,29 @@ const RegisterOrganizationPage = () => {
       } else {
         toast.error("Erro desconhecido ao criar a conta de organizador");
       }
+    }
+
+    try {
+      const res = await api.post("/auth/login", {
+        body: { email: values.email, password: values.password },
+      });
+
+      console.log("res", res);
+
+      if (res?.status === 401) {
+        setMessage("Erro ao realizar login: " + res.data.message);
+      } else {
+        setMessage("Login realizado com sucesso!");
+        setTimeout(() => {
+          window.location.href = "/register/profile-picture";
+        }, 3000);
+        sessionStorage.setItem("token", res.data.access_token);
+        sessionStorage.setItem("user", JSON.stringify(res.data.user));
+      }
+    } catch (error) {
+      console.error("Erro no login:", error);
+      toast.error("Erro desconhecido ao realizar login");
+      setMessage("Erro desconhecido ao realizar login");
     }
   }
 

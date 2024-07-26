@@ -29,7 +29,6 @@ import api from "@/app/_api/api";
 import { useRouter } from "next/navigation";
 import { Toaster, toast } from "react-hot-toast";
 import { useState, useEffect } from "react";
-import email from "next-auth/providers/email";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -69,12 +68,14 @@ const EditProfilePage = () => {
   const uploadUrl = `http://localhost:3000/upload/${data?.type}/${data?.id}`;
   const getImageUrl = async () => {
     if (!data?.type || !data?.id) {
-      console.error('Tipo ou ID não definidos');
+      console.error("Tipo ou ID não definidos");
       return;
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/upload/${data.type}/${data.id}/photo`);
+      const response = await fetch(
+        `http://localhost:3000/upload/${data.type}/${data.id}/photo`
+      );
 
       if (!response.ok) {
         throw new Error(`Erro na requisição: ${response.statusText}`);
@@ -82,18 +83,17 @@ const EditProfilePage = () => {
 
       // Assuming the response returns the actual file name
       const imageName = await response.text(); // Adjust this according to your API response format
-      console.log(imageName, 'imagem')
+      console.log(imageName, "imagem");
       // Construct the URL based on your server setup
       const imageUrl = `${imageName}`;
 
       setImageUrl(imageUrl);
     } catch (error) {
-      console.error('Erro ao buscar a imagem:', error);
+      console.error("Erro ao buscar a imagem:", error);
     }
   };
 
-
-  console.log(imageUrl, 'url')
+  console.log(imageUrl, "url");
   useEffect(() => {
     getImageUrl();
   }, []);
@@ -182,7 +182,6 @@ const EditProfilePage = () => {
                   layout="fill"
                   objectFit="cover"
                 />
-
               </div>
               <h1 className="uppercase font-bold text-xl pt-2 lg:hidden">
                 Edite seu perfil
@@ -280,8 +279,19 @@ const EditProfilePage = () => {
                       </FormItem>
                     )}
                   />
-                  <div>
-                    <input type="file" onChange={handleFileChange} />
+                  <div className="min-w-[18.75rem] flex">
+                    <input
+                      type="file"
+                      id="fileInput"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="fileInput"
+                      className="w-full rounded-3xl font-medium text-sm uppercase border text-[hsl(var(--foreground))] text-center py-2 cursor-pointer"
+                    >
+                      Escolher Foto
+                    </label>
                   </div>
                   <div>
                     <AlertDialog>

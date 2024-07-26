@@ -65,7 +65,7 @@ const LoginPage = () => {
     }
   }
 
-  return (
+  return ( 
     <>
       <Header2 />
       <Toaster />

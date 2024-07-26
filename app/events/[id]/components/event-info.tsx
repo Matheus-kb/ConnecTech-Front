@@ -162,7 +162,7 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => {
   }
 
   return (
-    <div className="flex flex-col justify-center lg:items-center pb-5">
+    <div className="flex flex-col justify-center lg:items-center pb-5 lg:pb-40">
       <div className="relative w-full h-44 lg:h-96 lg:w-[80%] lg:mx-auto lg:my-8">
         <Image
           src={imageUrl || "/image.png"}
@@ -228,7 +228,7 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => {
           )}
         </div>
       </div>
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center mt-4">
         <Button
           className="min-w-[18.75rem] rounded-3xl font-bold text-xl mt-4"
           onClick={handleBuyTicket}
@@ -236,18 +236,27 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => {
           Comprar ingresso
         </Button>
         <Button
-          className="]rounded-3xl font-bold text-xl mt-4 ml-4"
+          className="min-w-[18.75rem] rounded-3xl font-bold text-xl mt-4"
           onClick={handleVolunteerAssociation}
         >
-          Associar-se como Voluntário
+          Voluntariar-se
         </Button>
       </div>
-      <div className="flex flex-col items-center mt-4">
-        <input
-          type="file"
-          className="text-sm mb-2"
-          onChange={handleFileChange}
-        />
+      <div className="flex flex-col items-center justify-center mt-4">
+        <div className="min-w-[18.75rem] flex py-4">
+          <input
+            type="file"
+            id="fileInput"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+          <label
+            htmlFor="fileInput"
+            className="w-full rounded-3xl font-medium text-sm uppercase border text-[hsl(var(--foreground))] text-center py-2 cursor-pointer"
+          >
+            Escolher Foto
+          </label>
+        </div>
         <Button onClick={uploadImage}>Upload Imagem</Button>
       </div>
     </div>
