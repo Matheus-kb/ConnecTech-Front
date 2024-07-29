@@ -126,12 +126,13 @@ const ProfilePicture = () => {
                   Escolher Foto
                 </label>
               </div>
-              <Button
+              {!selectedFile ? "" : <Button
                 onClick={onSubmit}
                 className="min-w-[18.75rem] rounded-3xl font-bold text-xl uppercase"
               >
                 Enviar
-              </Button>
+              </Button>}
+              
             </div>
           </div>
         </div>
